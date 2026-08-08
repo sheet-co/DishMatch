@@ -26,7 +26,8 @@ dependencies {
 	implementation("org.springframework.ai:spring-ai-starter-model-google-genai")
 	// Source: https://mvnrepository.com/artifact/org.telegram/telegrambots-client
 	implementation("org.telegram:telegrambots-client:10.2.0")
-
+	// Source: https://mvnrepository.com/artifact/org.telegram/telegrambots-springboot-longpolling-starter
+	implementation("org.telegram:telegrambots-springboot-longpolling-starter:10.2.0")
 	compileOnly("org.projectlombok:lombok")
 	runtimeOnly("org.postgresql:postgresql")
 	annotationProcessor("org.projectlombok:lombok")
