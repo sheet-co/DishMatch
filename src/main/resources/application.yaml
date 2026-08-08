@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: dishMatch
+  ai:
+    google:
+      genai:
+        api-key: ${GEMINI_KEY}
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none

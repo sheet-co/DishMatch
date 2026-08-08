@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/dish_match_bd
+    username: your_user
+    password: your_password
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
