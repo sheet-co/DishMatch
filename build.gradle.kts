@@ -10,6 +10,7 @@ plugins {
 	id("org.springframework.boot") version "4.1.0"
 	id("io.spring.dependency-management") version "1.1.7"
 	id("org.flywaydb.flyway") version "13.2.0"
+	id("com.diffplug.spotless") version "8.9.0"
 }
 
 group = "dev.sheet_co"
@@ -46,26 +47,48 @@ flyway {
 		.split(',').map(String::trim).toTypedArray()
 }
 
+spotless {
+	java {
+		googleJavaFormat()
+
+		removeUnusedImports()
+		trimTrailingWhitespace()
+		endWithNewline()
+	}
+}
+
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-webmvc")
+
 	implementation("org.springframework.ai:spring-ai-starter-model-google-genai")
-	// Source: https://mvnrepository.com/artifact/org.telegram/telegrambots-client
-	implementation("org.telegram:telegrambots-client:10.2.0")
-	// Source: https://mvnrepository.com/artifact/org.telegram/telegrambots-springboot-longpolling-starter
-	implementation("org.telegram:telegrambots-springboot-longpolling-starter:10.2.0")
-	implementation("org.flywaydb:flyway-database-postgresql:13.2.0")
-	compileOnly("org.projectlombok:lombok")
+
+	// Flyway runtime для Spring Boot
+	implementation("org.springframework.boot:spring-boot-starter-flyway")
+	implementation("org.flywaydb:flyway-database-postgresql")
+
 	runtimeOnly("org.postgresql:postgresql")
+
+	implementation("org.telegram:telegrambots-client:10.2.0")
+	implementation("org.telegram:telegrambots-springboot-longpolling-starter:10.2.0")
+
+	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
-	testImplementation("org.springframework.boot:spring-boot-starter-actuator-test")
-	testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
-	testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
+
+
+	// TEST
+
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("org.springframework.boot:spring-boot-testcontainers")
+
+	testImplementation("org.testcontainers:testcontainers-junit-jupiter")
+	testImplementation("org.testcontainers:testcontainers-postgresql")
+
 	testCompileOnly("org.projectlombok:lombok")
-	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	testAnnotationProcessor("org.projectlombok:lombok")
 
+	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 dependencyManagement {
