@@ -1,24 +1,36 @@
 spring:
-  flyway:
-    locations: classpath:db/migrations
   application:
     name: dishMatch
-  ai:
-    google:
-      genai:
-        api-key: ${GEMINI_KEY}
-        chat:
-          model: gemini-3.1-flash-lite
-          temperature: 0.3
-          response-mime-type: application/json
+
   datasource:
     url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
+
     hikari:
       maximum-pool-size: 10
       minimum-idle: 2
+
   jpa:
     show-sql: true
+
     hibernate:
       ddl-auto: none
+
+  flyway:
+    locations: classpath:db/migrations
+
+  ai:
+    google:
+      genai:
+        api-key: ${GEMINI_KEY}
+
+        chat:
+          model: gemini-3.1-flash-lite
+          temperature: 0.3
+          response-mime-type: application/json
+
+
+logging:
+  level:
+    org.springframework.ai.chat.client.advisor: DEBUG
