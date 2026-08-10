@@ -1,7 +1,6 @@
 package dev.sheet_co.dishMatch.model;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,29 +11,29 @@ import jakarta.persistence.Table;
 import java.time.Instant;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Table(name = "history")
 @Getter
 @Setter
-@EntityListeners(AuditingEntityListener.class)
-public class DishHistory {
+public class History {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  private Long userId;
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "telegram_id", nullable = false)
+  private User user;
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "dish_id", nullable = false)
   private Dish dish;
 
-  @CreatedDate private Instant eatenAt;
+  private Instant eatenAt;
 
   @Override
   public String toString() {
-    return "dishId: %d, eatenAt: %s".formatted(dish.getId(), eatenAt);
+    return dish.toString() + " eatenAt: " + eatenAt;
   }
 }
