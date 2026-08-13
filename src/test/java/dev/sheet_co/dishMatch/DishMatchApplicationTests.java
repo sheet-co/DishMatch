@@ -2,6 +2,7 @@ package dev.sheet_co.dishMatch;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
+import dev.sheet_co.dishMatch.dto.ChatRequest;
 import dev.sheet_co.dishMatch.model.Dish;
 import dev.sheet_co.dishMatch.model.History;
 import dev.sheet_co.dishMatch.model.User;
@@ -131,8 +132,11 @@ class DishMatchApplicationTests {
         .containsExactlyInAnyOrder(
             plov.getId(), carbonara.getId(), steak.getId(), salad.getId(), chickenPasta.getId());
 
+    var request = new ChatRequest(
+        "Хочу что-нибудь мясное, сытное и желательно быстрое", USER_ID, 1L, "Bobby"
+    );
     List<Dish> result =
-        chatService.reccomend("Хочу что-нибудь мясное, сытное и желательно быстрое", USER_ID);
+        chatService.recommend(request);
 
     assertThat(result).isNotEmpty();
 
@@ -159,10 +163,10 @@ class DishMatchApplicationTests {
 
   private User createUser(Long telegramId) {
 
-    User user = new User();
-    user.setTelegramId(telegramId);
+    User localUser = new User();
+    localUser.setTelegramId(telegramId);
 
-    return userRepository.save(user);
+    return userRepository.save(localUser);
   }
 
   private Dish createDish(String name, List<String> ingredients, List<String> tags) {

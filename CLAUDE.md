@@ -66,3 +66,7 @@ Env var equivalents: `FLYWAY_URL`, `FLYWAY_USER`, `FLYWAY_PASSWORD`, `FLYWAY_LOC
 - Indexes support lookup by `dishes.user_id`, `history.user_id, eaten_at DESC`, and `history.dish_id`.
 
 There is no ORM entity/repository layer yet — code that adds one should follow this schema.
+
+## Working conventions
+
+- Never dig through library/dependency jars (compiled classes, bundled SQL/resource files, etc.) to figure out how something works or what a schema looks like. Use context7 for library docs, or ask the user if context7 doesn't have the answer.

@@ -64,6 +64,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
 
     implementation("org.springframework.ai:spring-ai-starter-model-google-genai")
+    implementation("org.springframework.ai:spring-ai-starter-model-chat-memory-repository-jdbc")
 
     // Flyway runtime для Spring Boot
     implementation("org.springframework.boot:spring-boot-starter-flyway")
