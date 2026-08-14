@@ -1,7 +1,7 @@
 package dev.sheet_co.dishMatch.telegram;
 
 import dev.sheet_co.dishMatch.dto.ChatRequest;
-import dev.sheet_co.dishMatch.service.ChatService;
+import dev.sheet_co.dishMatch.llm.ChatService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,9 +17,9 @@ import org.telegram.telegrambots.meta.generics.TelegramClient;
 
 /**
  * Dummy long-polling bot: echoes back any text message it receives. Registered automatically by
- * {@code telegrambots-springboot-longpolling-starter} because it implements
- * {@link SpringLongPollingBot}. Extends {@link DefaultLongPollingUpdateConsumer}, which dispatches
- * each update to {@link #consume(Update)} on a worker thread pool.
+ * {@code telegrambots-springboot-longpolling-starter} because it implements {@link
+ * SpringLongPollingBot}. Extends {@link DefaultLongPollingUpdateConsumer}, which dispatches each
+ * update to {@link #consume(Update)} on a worker thread pool.
  */
 @Slf4j
 @Component
@@ -37,19 +37,18 @@ class TelegramCommunication implements LongPollingUpdateConsumer {
     }
 
     var message = update.getMessage();
-    var request = new ChatRequest(
-        message.getText(),
-        message.getFrom().getId(),
-        message.getChatId(),
-        message.getFrom().getUserName()
-    );
+    var request =
+        new ChatRequest(
+            message.getText(),
+            message.getFrom().getId(),
+            message.getChatId(),
+            message.getFrom().getUserName());
     log.info("Received message {}", request);
 
     var chatResponse = chatService.recommend(request);
     var formattedResponse = responseFormatter.format(chatResponse);
 
-    var reply =
-        SendMessage.builder().chatId(request.chatId()).text(formattedResponse).build();
+    var reply = SendMessage.builder().chatId(request.chatId()).text(formattedResponse).build();
 
     try {
       client.execute(reply);

@@ -17,4 +17,6 @@ public interface HistoryRepository extends JpaRepository<History, Long> {
           where h.user.telegramId = :telegramId
           """)
   List<History> findAllByUserTelegramId(Long telegramId);
+
+  long countByUserTelegramId(Long telegramId);
 }

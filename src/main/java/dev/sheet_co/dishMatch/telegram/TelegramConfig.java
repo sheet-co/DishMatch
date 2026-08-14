@@ -31,6 +31,7 @@ class TelegramRegistration implements SpringLongPollingBot {
 
   @Value("${telegram.bot.token}")
   private String botToken;
+
   final TelegramCommunication telegramCommunication;
 
   @Override
