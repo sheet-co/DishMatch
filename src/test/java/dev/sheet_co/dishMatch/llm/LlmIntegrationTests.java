@@ -1,14 +1,15 @@
-package dev.sheet_co.dishMatch;
+package dev.sheet_co.dishMatch.llm;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
+import dev.sheet_co.dishMatch.NoTelegramTestConfig;
+import dev.sheet_co.dishMatch.dto.ChatRequest;
 import dev.sheet_co.dishMatch.model.Dish;
 import dev.sheet_co.dishMatch.model.History;
 import dev.sheet_co.dishMatch.model.User;
 import dev.sheet_co.dishMatch.repository.DishRepository;
 import dev.sheet_co.dishMatch.repository.HistoryRepository;
 import dev.sheet_co.dishMatch.repository.UserRepository;
-import dev.sheet_co.dishMatch.service.ChatService;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -18,33 +19,35 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.postgresql.PostgreSQLContainer;
 
-@SpringBootTest
+/**
+ * Boots the app for this test only, minus the {@code telegram} package: that module needs a real
+ * bot token and starts a long-polling client we don't want running here. Kept test-side so the
+ * telegram module stays untouched and fully testable on its own once we get to it.
+ */
+@SpringBootTest(classes = NoTelegramTestConfig.class)
 @Testcontainers
 @Slf4j
-class DishMatchApplicationTests {
+@ActiveProfiles("test")
+class LlmIntegrationTests {
 
   private static final Long USER_ID = 100L;
   private static final Long OTHER_USER_ID = 200L;
 
-  @Container
-  @ServiceConnection
+  @Container @ServiceConnection
   static PostgreSQLContainer postgres = new PostgreSQLContainer("postgres:16-alpine");
 
-  @Autowired
-  private DishRepository dishRepository;
+  @Autowired private DishRepository dishRepository;
 
-  @Autowired
-  private HistoryRepository historyRepository;
+  @Autowired private HistoryRepository historyRepository;
 
-  @Autowired
-  private UserRepository userRepository;
+  @Autowired private UserRepository userRepository;
 
-  @Autowired
-  private ChatService chatService;
+  @Autowired private ChatService chatService;
 
   private User user;
   private User otherUser;
@@ -131,8 +134,10 @@ class DishMatchApplicationTests {
         .containsExactlyInAnyOrder(
             plov.getId(), carbonara.getId(), steak.getId(), salad.getId(), chickenPasta.getId());
 
-    List<Dish> result =
-        chatService.reccomend("Хочу что-нибудь мясное, сытное и желательно быстрое", USER_ID);
+    var request =
+        new ChatRequest(
+            "Хочу что-нибудь мясное, сытное и желательно быстрое", USER_ID, 1L, "Bobby");
+    List<Dish> result = chatService.recommend(request);
 
     assertThat(result).isNotEmpty();
 
@@ -159,10 +164,10 @@ class DishMatchApplicationTests {
 
   private User createUser(Long telegramId) {
 
-    User user = new User();
-    user.setTelegramId(telegramId);
+    User localUser = new User();
+    localUser.setTelegramId(telegramId);
 
-    return userRepository.save(user);
+    return userRepository.save(localUser);
   }
 
   private Dish createDish(String name, List<String> ingredients, List<String> tags) {

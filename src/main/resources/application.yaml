@@ -30,6 +30,16 @@ spring:
           temperature: 0.3
           response-mime-type: application/json
 
+    chat:
+      memory:
+        repository:
+          jdbc:
+            # Table is managed by Flyway (V4__Add_chat_memory_table.sql), not Spring AI's own initializer.
+            initialize-schema: never
+
+telegram:
+  bot:
+    token: ${TELEGRAM_BOT_TOKEN}
 
 logging:
   level:

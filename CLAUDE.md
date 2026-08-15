@@ -18,7 +18,8 @@ Build tool is Gradle (Kotlin DSL) via the wrapper — always use `./gradlew`, no
 ./gradlew build                # compile + test + assemble
 ./gradlew bootRun              # run the app (requires env vars, see Configuration below)
 ./gradlew test                 # run all tests
-./gradlew test --tests "dev.sheet_co.dishMatch.DishMatchApplicationTests"   # run a single test class
+./gradlew test --tests "dev.sheet_co.dishMatch.llm.LlmIntegrationTests"   # run a single test class
+./gradlew spotlessApply        # to apply code style
 ```
 
 ### Database (Flyway + Postgres)
@@ -66,3 +67,8 @@ Env var equivalents: `FLYWAY_URL`, `FLYWAY_USER`, `FLYWAY_PASSWORD`, `FLYWAY_LOC
 - Indexes support lookup by `dishes.user_id`, `history.user_id, eaten_at DESC`, and `history.dish_id`.
 
 There is no ORM entity/repository layer yet — code that adds one should follow this schema.
+
+## Working conventions
+
+- Never dig through library/dependency jars (compiled classes, bundled SQL/resource files, etc.) to figure out how something works or what a schema looks like. Use context7 for library docs, or ask the user if context7 doesn't have the answer.
+- Run spotlessApply as a final step if you made any code changes.
