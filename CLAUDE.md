@@ -4,7 +4,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-DishMatch is a Telegram bot for dish matching ("Tg bot for cute dish matches"), built with Spring Boot 4.1 on Java 25. The project is at an early/skeleton stage: only the Spring Boot entry point (`DishMatchApplication`) and the database schema exist so far — no controllers, services, or Telegram/AI integration code has been added yet.
+DishMatch is a Telegram bot for dish matching ("Tg bot for cute dish matches"), built with Spring Boot 4.1 on Java 25.
+
+Project has modules, which are separated by their core concepts.
+- llm: all code connected to llm communication and context enrichment
+- telergam: everything telegram related
+- repository: db description (btw, see resources/db/migrations for the schemas)
+- dto: common dtos, used in multiple modules
 
 It uses java 25 and Spring 4, so feel free to use latest language features here. Use var, structured concurrency, virtual threads, records etc.
 
