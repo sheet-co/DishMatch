@@ -27,6 +27,7 @@ repositories {
 }
 
 extra["springAiVersion"] = "2.0.0"
+val telegramVersion = "10.2.0"
 
 fun flywayProperty(name: String, environmentVariable: String, default: String): String =
     providers.gradleProperty(name)
@@ -51,7 +52,6 @@ flyway {
 spotless {
     java {
         googleJavaFormat()
-
         removeUnusedImports()
         trimTrailingWhitespace()
         endWithNewline()
@@ -66,14 +66,14 @@ dependencies {
     implementation("org.springframework.ai:spring-ai-starter-model-google-genai")
     implementation("org.springframework.ai:spring-ai-starter-model-chat-memory-repository-jdbc")
 
+    implementation("org.telegram:telegrambots-client:$telegramVersion")
+    implementation("org.telegram:telegrambots-springboot-longpolling-starter:$telegramVersion")
+
     // Flyway runtime для Spring Boot
     implementation("org.springframework.boot:spring-boot-starter-flyway")
     implementation("org.flywaydb:flyway-database-postgresql")
 
     runtimeOnly("org.postgresql:postgresql")
-
-    implementation("org.telegram:telegrambots-client:10.2.0")
-    implementation("org.telegram:telegrambots-springboot-longpolling-starter:10.2.0")
 
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
